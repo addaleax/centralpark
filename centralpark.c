@@ -35,8 +35,13 @@ static void _BigFree(void* ptr, size_t sz) {
 #endif
 
 static struct CentralPark* newCentralPark_(size_t blocksize, size_t memsz, struct CentralPark* cp, size_t alignment) {	
-	if (alignment == 0)
+	if (alignment == 0) {
+#ifdef __AVX__
+		alignment = 32;
+#else
 		alignment = 16;
+#endif
+	}
 		
 	if (blocksize % alignment)
 		blocksize += alignment - (blocksize % alignment);
